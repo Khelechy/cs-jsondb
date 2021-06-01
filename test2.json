@@ -59,6 +59,12 @@
       "id": 1000,
       "title": "Newly added post",
       "completed": true
+    },
+    {
+      "userId": 50,
+      "id": 2000,
+      "title": "Updated title xxxxxxxx",
+      "completed": false
     }
   ]
 }

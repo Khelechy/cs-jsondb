@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using cs_jsondb.helpers;
 using System.Collections.Generic;
+using System.Reflection;
 
 public static class JsonDb{
     public static string jsonFile;
@@ -95,8 +96,23 @@ public static class JsonDb{
         }
     }
 
-    public static void update(this object data, string table, string key, dynamic value)
+    public static void update(this object data, string table, string key, dynamic value, object newData)
 	{
-
+        if(data != null)
+		{
+            var parsedData = JObject.Parse(data.ToString());
+            var result = (object)parsedData[table];
+            var dataArray = result.toDataList();
+			var x = dataArray.FirstOrDefault(x => x[key] == value);
+            foreach (PropertyInfo prop in newData.GetType().GetProperties())
+            {
+                var valueObject = prop.GetValue(newData, null);
+                x[prop.Name] = JToken.FromObject(valueObject);
+            }
+            
+            parsedData[table] = dataArray;
+            string newJsonResult = parsedData.ToString();
+            File.WriteAllText(jsonLocation, newJsonResult);
+        }
 	}
 }
