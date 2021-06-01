@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "DluaRAuHhy36SxFukRB8vvjc6P5Y6bGwuNic5q0UddGFnfbYroM3doKTqlgW6eUPrWUE9rVfLq8a0paLxxDnxw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kelechi.onyekwere\\source\\repos\\cs-jsondb\\cs-jsondb.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kelechi.onyekwere\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
