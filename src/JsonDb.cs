@@ -9,110 +9,167 @@ using cs_jsondb.helpers;
 using System.Collections.Generic;
 using System.Reflection;
 
-public static class JsonDb{
-    public static string jsonFile;
-    public static string jsonLocation;
-    private static JObject _dbObject;
+public static class JsonDb
+{
+	public static string jsonFile;
+	public static string jsonLocation;
+	private static JObject _dbObject;
 
-    public static JObject load(string filePathLoaded){
-        if(!File.Exists(filePathLoaded))
-            throw new Exception("File does not exist, please check file or file path");
-        jsonFile = File.ReadAllText(filePathLoaded);
-        jsonLocation = filePathLoaded;
-       return  _dbObject = JObject.Parse(jsonFile);
-    }
-
-    public static object select(this object data, string key = ""){
+	public static JObject load(string filePathLoaded)
+	{
+		if (!File.Exists(filePathLoaded))
+			throw new Exception("File does not exist, please check file or file path");
 		try
 		{
-			if (data != null)
-			{
-                var parsedData = JObject.Parse(data.ToString());
-                var result = (object)parsedData[key];
-                Console.WriteLine("Selected Data Result: " + result.ToString());
-                return result;
-			}
-			else
-			{
-                throw new Exception("The preloaded data is null");
-			}
-        }
-		catch (NullReferenceException ex)
-		{
-            Console.WriteLine(ex);
-            Console.WriteLine("No such table as: " + key);
-            return null;
+			jsonFile = File.ReadAllText(filePathLoaded);
+			jsonLocation = filePathLoaded;
+			return _dbObject = JObject.Parse(jsonFile);
 		}
-        
-    }
-
-	public static object where(this object data, string key = "", dynamic value = null)
-	{
-        if(data != null)
+		catch (Exception ex)
 		{
-            var dataArray = data.toDataList();
-            Console.WriteLine("This is the Data Array: " + dataArray);
-            var newDataArray = new List<object>();
-            foreach(var singleData in dataArray.Where(x => x[key] == value))
+			throw new Exception(ex.Message.ToString());
+		}
+	}
+
+	public static object select(this object data, string table = "")
+	{
+
+		if (data != null)
+		{
+			try
 			{
-                newDataArray.Add(singleData);
+				var parsedData = JObject.Parse(data.ToString());
+				var result = string.IsNullOrEmpty(table) ? (object)parsedData : (object)parsedData[table];
+				return result;
 			}
-            var xx = newDataArray;
-            return newDataArray;
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message.ToString());
+			}
 		}
 		else
 		{
-            return null;
+			throw new Exception("The preloaded data is null");
 		}
-        
 	}
 
-    public static void add(this object data, string table, object newData)
+	public static object where(this object data, string key = "", dynamic value = null)
 	{
-        if(data != null)
+		if (data != null)
 		{
-            var parsedData = JObject.Parse(data.ToString());
-            var result = (object)parsedData[table];
-            var dataArray = result.toDataList();
-            dataArray.Add(JObject.Parse(JsonConvert.SerializeObject(newData, Formatting.Indented)));
-            parsedData[table] = dataArray;
-            string newJsonResult = parsedData.ToString();
-            File.WriteAllText(jsonLocation, newJsonResult);
-        }
+			var dataArray = data.toDataList();
+			var newDataArray = new List<object>();
+			foreach (var singleData in dataArray.Where(x => x[key] as dynamic == value))
+			{
+				newDataArray.Add(singleData);
+			}
+			return newDataArray;
+		}
+		else
+		{
+			throw new Exception("The preloaded data is null");
+		}
+
 	}
 
-    public static void delete(this object data, string table, string key, dynamic value)
+	public static void add(this object data, string table, object newData)
 	{
-        if (data != null)
-        {
-            var parsedData = JObject.Parse(data.ToString());
-            var result = (object)parsedData[table];
-            var dataArray = result.toDataList();
-            var itemToBeDeleted = dataArray.FirstOrDefault(x => x[key] == value);
-            dataArray.Remove(itemToBeDeleted);
-            parsedData[table] = dataArray;
-            string newJsonResult = parsedData.ToString();
-            File.WriteAllText(jsonLocation, newJsonResult);
-        }
-    }
-
-    public static void update(this object data, string table, string key, dynamic value, object newData)
-	{
-        if(data != null)
+		if (data != null)
 		{
-            var parsedData = JObject.Parse(data.ToString());
-            var result = (object)parsedData[table];
-            var dataArray = result.toDataList();
-			var x = dataArray.FirstOrDefault(x => x[key] == value);
-            foreach (PropertyInfo prop in newData.GetType().GetProperties())
-            {
-                var valueObject = prop.GetValue(newData, null);
-                x[prop.Name] = JToken.FromObject(valueObject);
-            }
-            
-            parsedData[table] = dataArray;
-            string newJsonResult = parsedData.ToString();
-            File.WriteAllText(jsonLocation, newJsonResult);
-        }
+			//if (newData is { })
+			//	throw new Exception("Object you are trying to add is empty.");
+			try
+			{
+				var parsedData = JObject.Parse(data.ToString());
+				var result = string.IsNullOrEmpty(table) ? (object)parsedData : (object)parsedData[table];
+				var dataArray = result.toDataList();
+				dataArray.Add(JObject.Parse(JsonConvert.SerializeObject(newData, Formatting.Indented)));
+				parsedData[table] = dataArray;
+				string newJsonResult = parsedData.ToString();
+				File.WriteAllText(jsonLocation, newJsonResult);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message.ToString());
+			}
+		}
+		else
+		{
+			throw new Exception("The preloaded data is null");
+		}
+	}
+
+	public static void delete(this object data, string table, string key, dynamic value)
+	{
+		if (data != null)
+		{
+			try
+			{
+				var parsedData = JObject.Parse(data.ToString());
+				var result = (object)parsedData[table];
+				var dataArray = result.toDataList();
+				var itemToBeDeleted = dataArray.FirstOrDefault(x => x[key] as dynamic == value);
+				if (itemToBeDeleted == null)
+					throw new Exception("There are no objects with key: " + key + " , Please check key again");
+				dataArray.Remove(itemToBeDeleted);
+				parsedData[table] = dataArray;
+				string newJsonResult = parsedData.ToString();
+				File.WriteAllText(jsonLocation, newJsonResult);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message.ToString());
+			}
+		}
+		else
+		{
+			throw new Exception("The preloaded data is null");
+		}
+	}
+
+	public static void update(this object data, string table, string key, dynamic value, object newData)
+	{
+		if (data != null)
+		{
+			//if (newData is { })
+			//	throw new Exception("Object you are trying to add as an update is empty.");
+			try
+			{
+				var parsedData = JObject.Parse(data.ToString());
+				var result = (object)parsedData[table];
+				var dataArray = result.toDataList();
+				var x = dataArray.FirstOrDefault(x => x[key] as dynamic == value);
+				if (x == null)
+					throw new Exception("There are no objects with key: " + key + " , Please check key again");
+				foreach (PropertyInfo prop in newData.GetType().GetProperties())
+				{
+					var valueObject = prop.GetValue(newData, null);
+					x[prop.Name] = JToken.FromObject(valueObject);
+				}
+				parsedData[table] = dataArray;
+				string newJsonResult = parsedData.ToString();
+				File.WriteAllText(jsonLocation, newJsonResult);
+			}
+			catch (Exception ex)
+			{
+				throw new Exception(ex.Message.ToString());
+			}
+		}
+		else
+		{
+			throw new Exception("The preloaded data is null");
+		}
+	}
+
+	public static string toJsonString(this object data)
+	{
+		if(data != null)
+		{
+			return JsonConvert.SerializeObject(data);
+		}
+		else
+		{
+			throw new Exception("The preloaded data is null");
+		}
 	}
 }

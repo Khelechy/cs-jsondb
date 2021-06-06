@@ -15,19 +15,28 @@ namespace cs_jsondb.helpers
 			{
 				try
 				{
-					JArray dataArray = (JArray)data;
-					return dataArray;
+					var token = JToken.Parse(data.ToString());
+					if (token is JArray)
+					{
+
+						JArray dataArray = (JArray)data;
+						return dataArray;
+					}
+					else
+					{
+						throw new Exception("The preloaded data is not a Json Array");
+					}
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
-					Console.WriteLine(ex);
-					return null;
+					throw new Exception(ex.Message.ToString());
 				}
 			}
 			else
 			{
-				return null;
+				throw new Exception("The preloaded data is null");
 			}
 		}
+
 	}
 }

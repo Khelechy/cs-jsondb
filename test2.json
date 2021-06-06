@@ -1,70 +1,39 @@
 {
-  "posts": [
+  "users": [
     {
-      "userId": 1,
       "id": 1,
-      "title": "delectus aut autem",
-      "completed": true
+      "firstname": "kelechi",
+      "lastname": "onyekwere",
+      "age": 19,
+      "verified": true
     },
     {
-      "userId": 2,
       "id": 2,
-      "title": "quis ut nam facilis et officia qui",
-      "completed": false
+      "firstname": "john",
+      "lastname": "doe",
+      "age": 33,
+      "verified": true
     },
     {
-      "userId": 3,
       "id": 3,
-      "title": "fugiat veniam minus",
-      "completed": false
+      "firstname": "mark",
+      "lastname": "parker",
+      "age": 20,
+      "verified": false
     },
     {
-      "userId": 1,
       "id": 4,
-      "title": "et porro tempora",
-      "completed": true
+      "firstname": "billssaaxx",
+      "lastname": "whites",
+      "age": 24,
+      "verified": true
     },
     {
-      "userId": 3,
       "id": 5,
-      "title": "laboriosam mollitia et enim quasi adipisci quia provident illum",
-      "completed": false
-    },
-    {
-      "userId": 1,
-      "id": 6,
-      "title": "qui ullam ratione quibusdam voluptatem quia omnis",
-      "completed": false
-    },
-    {
-      "userId": 3,
-      "id": 7,
-      "title": "illo expedita consequatur quia in",
-      "completed": false
-    },
-    {
-      "userId": 3,
-      "id": 8,
-      "title": "quo adipisci enim quam ut ab",
-      "completed": true
-    },
-    {
-      "userId": 2,
-      "id": 9,
-      "title": "molestiae perspiciatis ipsa",
-      "completed": false
-    },
-    {
-      "userId": 100,
-      "id": 1000,
-      "title": "Newly added post",
-      "completed": true
-    },
-    {
-      "userId": 50,
-      "id": 2000,
-      "title": "Updated title xxxxxxxx",
-      "completed": false
+      "firstname": "krysten",
+      "lastname": "palmer",
+      "age": 22,
+      "verified": true
     }
   ]
 }
